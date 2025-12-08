@@ -17,6 +17,8 @@ mongoose
 
 // Routes
 app.use("/api", telemetryRoutes);
+app.use("/api", require("./routes/enrollmentRoutes"));
+
 
 // Default route
 app.get("/", (req, res) => {
