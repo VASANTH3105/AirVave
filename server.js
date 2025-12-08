@@ -3,6 +3,8 @@ const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
 
+const telemetryRoutes = require("./routes/telemetryRoutes");
+
 const app = express();
 app.use(express.json());
 app.use(cors());
@@ -11,13 +13,14 @@ app.use(cors());
 mongoose
   .connect(process.env.MONGO_URI)
   .then(() => console.log("MongoDB Connected"))
-  .catch((err) => console.error(err));
+  .catch((err) => console.error("MongoDB Error:", err));
 
 // Routes
-app.use("/api", require("./routes/telemetryRoutes"));
+app.use("/api", telemetryRoutes);
 
+// Default route
 app.get("/", (req, res) => {
-  res.send("AirVave MDM Backend Running");
+  res.send("AirVave MDM Backend Running 🚀");
 });
 
 const PORT = process.env.PORT || 5000;

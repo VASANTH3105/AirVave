@@ -30,7 +30,9 @@ exports.getAllDevices = async (req, res) => {
 exports.getDeviceTelemetry = async (req, res) => {
   try {
     const deviceId = req.params.deviceId;
-    const telemetry = await Telemetry.find({ device_id: deviceId }).sort({ received_at: -1 });
+    const telemetry = await Telemetry.find({ device_id: deviceId }).sort({
+      received_at: -1
+    });
 
     res.json({ success: true, telemetry });
   } catch (err) {
