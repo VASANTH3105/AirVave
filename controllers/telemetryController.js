@@ -60,6 +60,39 @@ exports.saveTelemetry = async (req, res) => {
   }
 };
 
+exports.toggleLauncher = async (req, res) => {
+  try {
+    const { deviceId, hide } = req.body; // hide: true = Hide Icon, false = Show Icon
+
+    const device = await Enrollment.findOne({ device_id: deviceId });
+    if (!device || !device.fcm_token) {
+      return res.status(404).json({ success: false, message: "Device not found" });
+    }
+
+    const actionCommand = hide ? "HIDE_LAUNCHER" : "SHOW_LAUNCHER";
+
+    const message = {
+      token: device.fcm_token,
+      data: {
+        action: actionCommand
+      },
+      android: { priority: "high" }
+    };
+
+    await admin.messaging().send(message);
+    console.log(`🚀 ${actionCommand} sent to ${deviceId}`);
+
+    res.json({ 
+      success: true, 
+      message: `Launcher ${hide ? "Hidden" : "Visible"} command sent` 
+    });
+
+  } catch (err) {
+    console.error("Launcher Toggle Error:", err);
+    res.status(500).json({ success: false, message: err.message });
+  }
+};
+
 exports.getAllDevices = async (req, res) => {
   try {
     const devices = await Enrollment.find();

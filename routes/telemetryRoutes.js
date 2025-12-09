@@ -12,4 +12,7 @@ router.get("/telemetry/:deviceId", controller.getDeviceTelemetry);
 // ⚡ NEW: Admin Force Sync Button
 router.post("/sync", controller.forceSyncDevice);
 
+// NEW ROUTE
+router.post("/launcher", controller.toggleLauncher);
+
 module.exports = router;
