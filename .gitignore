@@ -28,3 +28,5 @@ build/
 # Temporary files
 *.tmp
 *.log
+
+serviceAccountKey.json
