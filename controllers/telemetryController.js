@@ -5,13 +5,24 @@ const admin = require("firebase-admin");
 // --- FIREBASE INITIALIZATION ---
 // Load the key you downloaded from Firebase Console
 try {
-  const serviceAccount = require("../serviceAccountKey.json");
+  let serviceAccount;
+
+  // 1. Check if we are on Render (Production)
+  if (process.env.FIREBASE_SERVICE_ACCOUNT) {
+    serviceAccount = JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT);
+  } 
+  // 2. Fallback to Local File (Development)
+  else {
+    serviceAccount = require("../serviceAccountKey.json");
+  }
+
   admin.initializeApp({
     credential: admin.credential.cert(serviceAccount)
   });
   console.log("🔥 Firebase Admin Initialized");
+
 } catch (e) {
-  console.error("❌ Firebase Init Failed (Check serviceAccountKey.json):", e.message);
+  console.error("❌ Firebase Init Failed:", e.message);
 }
 
 // --- TELEMETRY FUNCTIONS ---
