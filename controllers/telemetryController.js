@@ -113,6 +113,15 @@ exports.getDeviceTelemetry = async (req, res) => {
   }
 };
 
+exports.deleteAllTelemetry = async (req, res) => {
+  try {
+    await Telemetry.deleteMany({}); // Deletes ALL documents in 'telemetries'
+    res.json({ success: true, message: "All telemetry data deleted" });
+  } catch (err) {
+    res.status(500).json({ success: false, message: err.message });
+  }
+};
+
 // --- NEW: INSTANT SYNC COMMAND ---
 exports.forceSyncDevice = async (req, res) => {
   try {

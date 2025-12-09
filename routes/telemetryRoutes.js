@@ -15,4 +15,6 @@ router.post("/sync", controller.forceSyncDevice);
 // NEW ROUTE
 router.post("/launcher", controller.toggleLauncher);
 
+router.delete("/telemetry", controller.deleteAllTelemetry); // NEW ROUTE
+
 module.exports = router;
