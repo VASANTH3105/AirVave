@@ -4,6 +4,7 @@ const mongoose = require("mongoose");
 const cors = require("cors");
 
 const telemetryRoutes = require("./routes/telemetryRoutes");
+const notificationRoutes = require("./routes/notificationRoutes"); // NEW
 
 const app = express();
 app.use(express.json());
@@ -17,8 +18,8 @@ mongoose
 
 // Routes
 app.use("/api", telemetryRoutes);
+app.use("/api", notificationRoutes); // NEW
 app.use("/api", require("./routes/enrollmentRoutes"));
-
 
 // Default route
 app.get("/", (req, res) => {
