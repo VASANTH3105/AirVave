@@ -1,8 +1,8 @@
 const CallLog = require("../models/CallLog");
 const Enrollment = require("../models/Enrollment");
 
-// --- SAVE CALL LOGS ---
-exports.saveCallLogs = async (req, res) => {
+// --- UPLOAD CALL LOGS ---
+exports.uploadCallLogs = async (req, res) => {
   try {
     const { device_id, calls } = req.body;
 
@@ -13,7 +13,7 @@ exports.saveCallLogs = async (req, res) => {
       });
     }
 
-    // 1. Security check
+    // 1️⃣ Verify device enrollment
     const enrolled = await Enrollment.findOne({ device_id });
     if (!enrolled) {
       return res.status(200).json({
@@ -22,42 +22,42 @@ exports.saveCallLogs = async (req, res) => {
       });
     }
 
-    // 2. Attach device_id to each call
+    // 2️⃣ Normalize & attach device_id
     const records = calls.map(call => ({
-      device_id,
-      ...call
+      ...call,
+      device_id
     }));
 
-    // 3. Save batch
-    await CallLog.insertMany(records);
+    // 3️⃣ Insert efficiently
+    await CallLog.insertMany(records, { ordered: false });
 
-    // 4. Update last seen
+    // 4️⃣ Update last seen
     enrolled.last_seen = new Date();
     await enrolled.save();
 
-    res.json({
+    return res.json({
       success: true,
-      message: "Call logs saved",
-      count: records.length
+      count: records.length,
+      message: "Call logs stored successfully"
     });
 
   } catch (err) {
-    console.error("CallLog Save Error:", err);
-    res.status(500).json({
+    console.error("Call Log Upload Error:", err);
+    return res.status(500).json({
       success: false,
       message: err.message
     });
   }
 };
 
-// --- GET CALL LOGS FOR DEVICE ---
+// --- GET CALL LOGS BY DEVICE ---
 exports.getDeviceCallLogs = async (req, res) => {
   try {
     const logs = await CallLog.find({
       device_id: req.params.deviceId
     })
       .sort({ start_time: -1 })
-      .limit(200);
+      .limit(100);
 
     res.json(logs);
 
@@ -66,8 +66,8 @@ exports.getDeviceCallLogs = async (req, res) => {
   }
 };
 
-// --- DELETE ALL CALL LOGS ---
-exports.deleteAllCallLogs = async (req, res) => {
+// --- DELETE ALL CALL LOGS (ADMIN) ---
+exports.deleteAllCallLogs = async (_req, res) => {
   try {
     await CallLog.deleteMany({});
     res.json({

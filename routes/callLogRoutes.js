@@ -3,9 +3,9 @@ const router = express.Router();
 const controller = require("../controllers/callLogController");
 
 // Android → Server
-router.post("/call-logs", controller.saveCallLogs);
+router.post("/call-logs", controller.uploadCallLogs);
 
-// Admin APIs
+// Admin
 router.get("/call-logs/:deviceId", controller.getDeviceCallLogs);
 router.delete("/call-logs", controller.deleteAllCallLogs);
 
