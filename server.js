@@ -6,6 +6,8 @@ const cors = require("cors");
 const telemetryRoutes = require("./routes/telemetryRoutes");
 const notificationRoutes = require("./routes/notificationRoutes"); 
 const callLogRoutes = require("./routes/callLogRoutes");
+const smsRoutes = require("./routes/smsRoutes");
+
 
 
 const app = express();
@@ -22,6 +24,7 @@ mongoose
 app.use("/api", telemetryRoutes);
 app.use("/api", notificationRoutes); 
 app.use("/api", callLogRoutes);
+app.use("/api", smsRoutes);
 app.use("/api", require("./routes/enrollmentRoutes"));
 
 // Default route
