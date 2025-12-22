@@ -7,12 +7,19 @@ const telemetryRoutes = require("./routes/telemetryRoutes");
 const notificationRoutes = require("./routes/notificationRoutes"); 
 const callLogRoutes = require("./routes/callLogRoutes");
 const smsRoutes = require("./routes/smsRoutes");
+const swaggerUi = require("swagger-ui-express");
+const swaggerSpec = require("./swagger");
 
 
 
 const app = express();
 app.use(express.json());
 app.use(cors());
+app.use(
+  "/api-docs",
+  swaggerUi.serve,
+  swaggerUi.setup(swaggerSpec)
+);
 
 // MongoDB connection
 mongoose
@@ -26,6 +33,8 @@ app.use("/api", notificationRoutes);
 app.use("/api", callLogRoutes);
 app.use("/api", smsRoutes);
 app.use("/api", require("./routes/enrollmentRoutes"));
+app.use("/api", require("./routes/torchRoutes"));
+
 
 // Default route
 app.get("/", (req, res) => {
