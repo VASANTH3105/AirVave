@@ -10,16 +10,17 @@ const options = {
     },
     servers: [
       {
-        url: "http://localhost:5000/api",
-        description: "Local Server"
+        // 👇 CHANGE THIS: Use a relative path instead of hardcoded http://localhost:5000
+        url: "/api", 
+        description: "Current Server (Relative)"
       },
       {
-        url: "https://your-production-url/api",
-        description: "Production Server"
+        url: "http://localhost:5000/api",
+        description: "Local Server (Hardcoded)"
       }
     ],
   },
-  apis: ["./routes/*.js"], // auto-scan route files
+  apis: ["./routes/*.js"], 
 };
 
 module.exports = swaggerJSDoc(options);
